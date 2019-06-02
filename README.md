@@ -47,7 +47,7 @@ Step ==> 1 Select one option: Add New Product
 
 Step ==> 2 I added a new item "Pear", Department "Fruits", Price ".25", quantity "40" 
 
-<img width="1680" alt="AddNewProduct-2" src="https://user-images.githubusercontent.com/47442758/58758802-74e4b180-84e6-11e9-80e1-f31bd054c720.png">
+<img width="1680" alt="AddNewProduct-2" src="https://user-images.githubusercontent.com/47442758/58758851-57641780-84e7-11e9-82b9-4b4c1c9cdeae.png">
 
 Step ==> 3 Finally show up the new item pear added.
 
