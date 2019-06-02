@@ -29,9 +29,14 @@ Step ==> 1
 
  Step ==> 2
  
- 
+ <img width="1680" alt="AddToInventory-2" src="https://user-images.githubusercontent.com/47442758/58758719-dad03980-84e4-11e9-8668-4ef51f02e575.png">
+
  Step ==> 3
  
 <img width="1680" alt="AddToInventory-3" src="https://user-images.githubusercontent.com/47442758/58758709-993f8e80-84e4-11e9-9a01-0d0eea87daea.png">
+
+Step ==> 4
+
+<img width="1680" alt="AddToInventory-4" src="https://user-images.githubusercontent.com/47442758/58758720-e28fde00-84e4-11e9-8a39-3a7348cd432a.png">
 
 4. If a manager selects Add New Product, it should allow the manager to add a completely new product to the store.
