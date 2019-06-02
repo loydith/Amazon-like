@@ -24,6 +24,14 @@
 
 3. If a manager selects Add to Inventory, your app should display a prompt that will let the manager "add more" of any item currently in the store.
 
+Step ==> 1
+<img width="1680" alt="AddToInventory-1" src="https://user-images.githubusercontent.com/47442758/58758697-3fd75f80-84e4-11e9-8dca-32719ab7f051.png">
+
+ Step ==> 2
+ 
+ 
+ Step ==> 3
+
 
 
 4. If a manager selects Add New Product, it should allow the manager to add a completely new product to the store.
