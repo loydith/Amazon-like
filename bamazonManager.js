@@ -9,28 +9,32 @@ var connection = mysql.createConnection({
   database: "bamazon_DB"
 })
 //start
-function start(){
+function startMenu(){
   inquirer.prompt([{
     type: "list",
     name: "id",
-    message: "What would you like to do?",
+    message: "Select one option:",
     choices: ["View Products for Sale", "View Low Inventory", "Add to Inventory", "Add New Product","End Session"]
   }]).then(function(ans){
      switch(ans.id){
       case "View Products for Sale": 
       viewProducts();
       break;
+      
       case "View Low Inventory": 
       viewLowInventory();
       break;
+      
       case "Add to Inventory": 
       addToInventory();
       break;
+      
       case "Add New Product": 
       addNewProduct();
       break;
       
-      
+      default:
+        console.log("Menu")
       
     }
   });
@@ -52,66 +56,101 @@ function viewProducts(){
     console.log("-----------------------------------------------");
   }
 
-  start();
+  startMenu();
   });
 }
 
 //////////////////////////////viewLowInventory
 function viewLowInventory(){
   console.log("==============View Low Inventory=================");
-  connection.query('SELECT * FROM products', function(err, res){
-  if(err) throw err;
-  console.log("-------------------------------------------------");
-  for(var i = 0; i<res.length;i++){
-    if(res[i].stock_quantity < 5){
-    console.log("ID: " + res[i].item_id + " | " + 
-                "Product: " + res[i].product_name + " | $" +  
-                "Price: " + res[i].price + " | " + 
-                "Quantity: " + res[i].stock_quantity);
-    console.log("-----------------------------------------------");
-    }
-  }
+    var query = "SELECT item_id, product_name, price, stock_quantity FROM products WHERE stock_quantity < 5;";
+    connection.query(query, function (err, res) {
 
-  start();
-  });
+        if (res.length > 0) {
+            for (var i = 0; i < res.length; i++) {
+                console.log(res[i].item_id + " | " + 
+                            res[i].product_name + " | Inventory: " + 
+                            res[i].stock_quantity);
+                console.log("--------------------------------------------");
+            }
+        } else {
+            console.log("No items are low on inventory.");
+        }
+
+        startMenu();
+    });
 }
 
 ////////////////////////////addToInventory
 function addToInventory(){
   console.log("=============== Add to Inventory================");
-  connection.query("SELECT * FROM Products", function(err, res){
+//   inquirer.prompt([
+//   {
+
+//     type: "list",
+//     name: "",
+//     message: "Select the item that would you like to add:",
+// },
+// {
+//     type: "input",
+//     name: "quantity",
+//     message: "How many would you like to add?",
+
+// }
+// ]).then(function(response) {
+
+//       connection.query("UPDATE products SET ? WHERE ?", [{
+
+//           stock_quantity: response.quantity
+//       }, {
+//           item_id: response.product_name
+//       }], function(err, res) {
+//       });
+//   startMenu();
+// });
+// }
+
+
+
+
+
+  ////////////////////////
+  connection.query("SELECT * FROM products", function(err, res){
   if(err) throw err;
   var itemArray = [];
   for(var i=0; i<res.length; i++){
     itemArray.push(res[i].product_name);
   }
-  inquirer.prompt([{
+  inquirer.prompt([
+    {
     type: "list",
     name: "product",
     choices: itemArray,
-    message: "Which item would you like to add inventory?"
-  }, {
-    type: "input",
-    name: "quantity",
-    message: "How much would you like to add?",
+    message: "Select the item that would you like to add:"
+  }, 
+    {
+    name: "newProduct",
+    message: "How many would you like to add?",
     validate: function(value){
-      if(isNaN(value) === false){return true;}
-      else{return false;}
-    }
-    }]).then(function(ans){
-      var currentQty;
-      for(var i=0; i<res.length; i++){
-        if(res[i].product_name === ans.product){
-          currentQty = res[i].stock_quantity;
-        }
+      if(Number(value) === NaN){
+        return "Enter a number:";
       }
-      connection.query("UPDATE products SET ? WHERE ?", [
-        {stock_quantity: currentQty + parseInt(ans.qty)},
-        {product_name: ans.product}
-        ], function(err, res){
-          if(err) throw err;
-          console.log("The quantity was updated.");
-          start();
+    
+      else{
+        return true;
+      }
+    
+    }
+    }]).then(function(res){
+      // var newItem = res.product.charAt(0);
+      // console.log(res.newItem);
+
+      var query = "UPDATE products SET stock_quantity = " + res.newProduct +  " WHERE product_name = '" + res.product + "'";
+            connection.query(query, function (err) {
+                if (err) throw err;
+                console.log("Succesfull updated.");
+
+                startMenu();
         });
       })
   });
@@ -130,31 +169,35 @@ function addNewProduct(){
 
   inquirer.prompt([
     {
-    name: "product",
-    message: "Product: ",
+    name: "name",
+    message: "Type the product name: ",
 
   }, {
     
     name: "department",
-    message: "Department: ",
+    message: "what department belong the product? ",
     
   }, {
     
     name: "price",
-    message: "Price: ",
+    message: "How much is the price? ",
     
   }, {
     
     name: "quantity",
-    message: "Quantity: ",
+    message: "How many would you like to add?",
     validate: function(value){
-      if(isNaN(value) == false){return true;}
-      else{return false;}
+      if(isNaN(value) == false){
+        return true;
+      }
+      else{
+        return false;
+      }
     }
   }]).then(function(ans){
     connection.query("INSERT INTO products SET ?",{
       // item_id: ans.id,
-      product_name: ans.product,
+      product_name: ans.name,
       price: ans.price,
       department_name: ans.department,
       stock_quantity: ans.quantity
@@ -162,8 +205,8 @@ function addNewProduct(){
       if(err) throw err;
       console.log("Another item was added to the store.");
     })
-    start();
+    startMenu();
   });
 }
 
-start();
+startMenu();
