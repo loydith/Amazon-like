@@ -4,10 +4,8 @@ var inquirer = require('inquirer');
 var connection = mysql.createConnection({
 	host: 'localhost',
 	port: 3306,
-	//username
 	user: 'root',
-	//password
-	password: '',
+	password: 'Estudiante2019@',
 	database: 'bamazon_DB',
 });
 //start
@@ -53,32 +51,14 @@ function start(){
         var howMuchToBuy = parseInt(ans.quantity);
         var grandTotal = parseFloat(((res[whatToBuy].Price)*howMuchToBuy).toFixed(2));
 
-        if(res[whatToBuy].StockQuantity >= howMuchToBuy){
+        if(res[whatToBuy].stock_quantity >= howMuchToBuy){
           connection.query("UPDATE Products SET ? WHERE ?", [
-          {StockQuantity: (res[whatToBuy].StockQuantity - howMuchToBuy)},
-          {ItemID: ans.id}
+          {stock_quantity: (res[whatToBuy].stock_quantity - howMuchToBuy)},
+          {item_id: ans.id}
           ], function(err, result){
               if(err) throw err;
               console.log("Success! Your total is $" + grandTotal.toFixed(2) + ". Your item(s) will be shipped to you in 3-5 business days.");
-          });
-  
-          connection.query("SELECT * FROM Departments", function(err, deptRes){
-            if(err) throw err;
-            var index;
-            for(var i = 0; i < deptRes.length; i++){
-              if(deptRes[i].DepartmentName === res[whatToBuy].DepartmentName){
-                index = i;
-              }
-            }
-            connection.query("UPDATE Departments SET ? WHERE ?", [
-            {TotalSales: deptRes[index].TotalSales + grandTotal},
-            {DepartmentName: res[whatToBuy].DepartmentName}
-            ], function(err, deptRes){
-                if(err) throw err;
-                console.log("Updated Departments Sales.");
-            });
-          });
-  
+          });  
         } else{
           console.log("Sorry, we don't have enough in stock!");
         }

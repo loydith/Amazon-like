@@ -6,7 +6,7 @@ var connection = mysql.createConnection({
   host: "localhost",
   port: 3306,
   user: "root",
-  password: "",
+  password: "Estudiante2019@",
   database: "bamazon_DB"
 })
 //start
@@ -18,13 +18,17 @@ function start(){
     choices: ["View Products for Sale", "View Low Inventory", "Add to Inventory", "Add New Product","End Session"]
   }]).then(function(ans){
      switch(ans.doThing){
-      case "View Products for Sale": viewProducts();
+      case "View Products for Sale": 
+      viewProducts();
       break;
-      case "View Low Inventory": viewLowInventory();
+      case "View Low Inventory": 
+      viewLowInventory();
       break;
-      case "Add to Inventory": addToInventory();
+      case "Add to Inventory": 
+      addToInventory();
       break;
-      case "Add New Product": addNewProduct();
+      case "Add New Product": 
+      addNewProduct();
       break;
       
     }
@@ -40,11 +44,11 @@ function viewProducts(){
   console.log("-------------------------------------------------");
 
   for(var i = 0; i<res.length;i++){
-    console.log("ID: " + res[i].ItemID + " | " + 
-                "Product: " + res[i].ProductName + " | " + 
-                "Department: " + res[i].DepartmentName + " | " + 
-                "Price: " + res[i].Price + " | " + 
-                "Quantity: " + res[i].StockQuantity);
+    console.log("ID: " + res[i].item_id + " | " + 
+                "Product: " + res[i].product_name + " | " + 
+                "Department: " + res[i].department_name + " | " + 
+                "Price: " + res[i].price + " | " + 
+                "Quantity: " + res[i].stock_quantity);
     console.log("-----------------------------------------------");
   }
 
@@ -119,10 +123,10 @@ function addToInventory(){
 function addNewProduct(){
   console.log("---------------------------------------------------");
   var deptNames = [];
-  connection.query("SELECT * FROM Departments", function(err, res){
+  connection.query("SELECT * FROM products", function(err, res){
     if(err) throw err;
     for(var i = 0; i<res.length; i++){
-      deptNames.push(res[i].DepartmentName);
+      deptNames.push(res[i].Name);
     }
   })
 
@@ -143,10 +147,7 @@ function addNewProduct(){
     type: "input",
     name: "price",
     message: "Price: ",
-    validate: function(value){
-      if(isNaN(value) === false){return true;}
-      else{return false;}
-    }
+    
   }, {
     type: "input",
     name: "quantity",
@@ -157,10 +158,11 @@ function addNewProduct(){
     }
   }]).then(function(ans){
     connection.query("INSERT INTO Products SET ?",{
-      ProductName: ans.product,
-      DepartmentName: ans.department,
-      Price: ans.price,
-      StockQuantity: ans.quantity
+      item_id: ans.product,
+      product_name: ans.department,
+      price: ans.price,
+      department_name: ans.department,
+      stock_quantity: ans.quantity
     }, function(err, res){
       if(err) throw err;
       console.log("Another item was added to the store.");
