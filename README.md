@@ -19,6 +19,8 @@
 
 2. If a manager selects View Low Inventory, then it should list all items with an inventory count lower than five.
 
+<img width="1680" alt="ViewLowInventory" src="https://user-images.githubusercontent.com/47442758/58758620-5e892680-84e3-11e9-9c3d-d53d6e78c279.png">
+
 
 3. If a manager selects Add to Inventory, your app should display a prompt that will let the manager "add more" of any item currently in the store.
 
