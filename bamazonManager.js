@@ -1,7 +1,6 @@
-//require mysql and inquirer
+
 var mysql = require('mysql');
 var inquirer = require('inquirer');
-//create connection to db
 var connection = mysql.createConnection({
   host: "localhost",
   port: 3306,
@@ -13,11 +12,11 @@ var connection = mysql.createConnection({
 function start(){
   inquirer.prompt([{
     type: "list",
-    name: "doThing",
+    name: "id",
     message: "What would you like to do?",
     choices: ["View Products for Sale", "View Low Inventory", "Add to Inventory", "Add New Product","End Session"]
   }]).then(function(ans){
-     switch(ans.doThing){
+     switch(ans.id){
       case "View Products for Sale": 
       viewProducts();
       break;
@@ -31,22 +30,23 @@ function start(){
       addNewProduct();
       break;
       
+      
+      
     }
   });
 }
 
-//viewProducts
+///////////////////////////////viewProducts
 function viewProducts(){
-  console.log("-------------------------------------------------");
+  console.log("==============View Products======================");
 
-  connection.query("SELECT * FROM Products", function(err, res){
+  connection.query("SELECT * FROM products", function(err, res){
   if(err) throw err;
   console.log("-------------------------------------------------");
 
   for(var i = 0; i<res.length;i++){
     console.log("ID: " + res[i].item_id + " | " + 
-                "Product: " + res[i].product_name + " | " + 
-                "Department: " + res[i].department_name + " | " + 
+                "Product: " + res[i].product_name + " | $" +  
                 "Price: " + res[i].price + " | " + 
                 "Quantity: " + res[i].stock_quantity);
     console.log("-----------------------------------------------");
@@ -56,19 +56,18 @@ function viewProducts(){
   });
 }
 
-//viewLowInventory
+//////////////////////////////viewLowInventory
 function viewLowInventory(){
-  console.log("------------------------------------------------");
-  connection.query('SELECT * FROM Products', function(err, res){
+  console.log("==============View Low Inventory=================");
+  connection.query('SELECT * FROM products', function(err, res){
   if(err) throw err;
   console.log("-------------------------------------------------");
   for(var i = 0; i<res.length;i++){
-    if(res[i].StockQuantity <= 10){
-    console.log("ID: " + res[i].ItemID + " | " + 
-                "Product: " + res[i].ProductName + " | " + 
-                "Department: " + res[i].DepartmentName + " | " + 
-                "Price: " + res[i].Price + " | " + 
-                "Quantity: " + res[i].StockQuantity);
+    if(res[i].stock_quantity < 5){
+    console.log("ID: " + res[i].item_id + " | " + 
+                "Product: " + res[i].product_name + " | $" +  
+                "Price: " + res[i].price + " | " + 
+                "Quantity: " + res[i].stock_quantity);
     console.log("-----------------------------------------------");
     }
   }
@@ -77,16 +76,15 @@ function viewLowInventory(){
   });
 }
 
-//addToInventory
+////////////////////////////addToInventory
 function addToInventory(){
-  console.log("------------------------------------------------");
+  console.log("=============== Add to Inventory================");
   connection.query("SELECT * FROM Products", function(err, res){
   if(err) throw err;
   var itemArray = [];
   for(var i=0; i<res.length; i++){
-    itemArray.push(res[i].ProductName);
+    itemArray.push(res[i].product_name);
   }
-
   inquirer.prompt([{
     type: "list",
     name: "product",
@@ -103,13 +101,13 @@ function addToInventory(){
     }]).then(function(ans){
       var currentQty;
       for(var i=0; i<res.length; i++){
-        if(res[i].ProductName === ans.product){
-          currentQty = res[i].StockQuantity;
+        if(res[i].product_name === ans.product){
+          currentQty = res[i].stock_quantity;
         }
       }
-      connection.query("UPDATE Products SET ? WHERE ?", [
-        {StockQuantity: currentQty + parseInt(ans.qty)},
-        {ProductName: ans.product}
+      connection.query("UPDATE products SET ? WHERE ?", [
+        {stock_quantity: currentQty + parseInt(ans.qty)},
+        {product_name: ans.product}
         ], function(err, res){
           if(err) throw err;
           console.log("The quantity was updated.");
@@ -119,37 +117,34 @@ function addToInventory(){
   });
 }
 
-//addNewProducts
+/////////////////////////////////addNewProducts
 function addNewProduct(){
-  console.log("---------------------------------------------------");
+  console.log("=================Add New Product=================");
   var deptNames = [];
   connection.query("SELECT * FROM products", function(err, res){
     if(err) throw err;
     for(var i = 0; i<res.length; i++){
-      deptNames.push(res[i].Name);
+      deptNames.push(res[i].department_name);
     }
   })
 
-  inquirer.prompt([{
-    type: "input",
+  inquirer.prompt([
+    {
     name: "product",
     message: "Product: ",
-    validate: function(value){
-      if(value){return true;}
-      else{return false;}
-    }
+
   }, {
-    type: "list",
+    
     name: "department",
     message: "Department: ",
-    choices: deptNames
+    
   }, {
-    type: "input",
+    
     name: "price",
     message: "Price: ",
     
   }, {
-    type: "input",
+    
     name: "quantity",
     message: "Quantity: ",
     validate: function(value){
@@ -157,9 +152,9 @@ function addNewProduct(){
       else{return false;}
     }
   }]).then(function(ans){
-    connection.query("INSERT INTO Products SET ?",{
-      item_id: ans.product,
-      product_name: ans.department,
+    connection.query("INSERT INTO products SET ?",{
+      // item_id: ans.id,
+      product_name: ans.product,
       price: ans.price,
       department_name: ans.department,
       stock_quantity: ans.quantity

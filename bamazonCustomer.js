@@ -49,18 +49,18 @@ function start(){
       ]).then(function(ans){
         var whatToBuy = (ans.id)-1;
         var howMuchToBuy = parseInt(ans.quantity);
-        var grandTotal = parseFloat(((res[whatToBuy].Price)*howMuchToBuy).toFixed(2));
+        var grandTotal = parseFloat(((res[whatToBuy].price)*howMuchToBuy).toFixed(2));
 
         if(res[whatToBuy].stock_quantity >= howMuchToBuy){
-          connection.query("UPDATE Products SET ? WHERE ?", [
+          connection.query("UPDATE products SET ? WHERE ?", [
           {stock_quantity: (res[whatToBuy].stock_quantity - howMuchToBuy)},
           {item_id: ans.id}
           ], function(err, result){
               if(err) throw err;
-              console.log("Success! Your total is $" + grandTotal.toFixed(2) + ". Your item(s) will be shipped to you in 3-5 business days.");
+              console.log("Success! Your total is $" + grandTotal.toFixed(2) + ". Thanks for your purchase.");
           });  
         } else{
-          console.log("Sorry, we don't have enough in stock!");
+          console.log("Insufficient quantity!!");
         }
   
         reprompt();
