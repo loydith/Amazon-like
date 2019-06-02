@@ -24,18 +24,19 @@
 
 3. If a manager selects Add to Inventory, your app should display a prompt that will let the manager "add more" of any item currently in the store.
 
-Step ==> 1
+Step ==> 1  select the option Add To Inventory
+
 <img width="1680" alt="AddToInventory-1" src="https://user-images.githubusercontent.com/47442758/58758697-3fd75f80-84e4-11e9-8dca-32719ab7f051.png">
 
- Step ==> 2
+ Step ==> 2 Select the item in this example I selected carrots.
  
  <img width="1680" alt="AddToInventory-2" src="https://user-images.githubusercontent.com/47442758/58758719-dad03980-84e4-11e9-8668-4ef51f02e575.png">
 
- Step ==> 3
+ Step ==> 3 This example I added 25 carrots.
  
 <img width="1680" alt="AddToInventory-3" src="https://user-images.githubusercontent.com/47442758/58758709-993f8e80-84e4-11e9-9a01-0d0eea87daea.png">
 
-Step ==> 4
+Step ==> 4 Finally show up the new list with the 25 carrots added.
 
 <img width="1680" alt="AddToInventory-4" src="https://user-images.githubusercontent.com/47442758/58758720-e28fde00-84e4-11e9-8a39-3a7348cd432a.png">
 
