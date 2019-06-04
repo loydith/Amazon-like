@@ -84,37 +84,6 @@ function viewLowInventory(){
 ////////////////////////////addToInventory
 function addToInventory(){
   console.log("=============== Add to Inventory================");
-//   inquirer.prompt([
-//   {
-
-//     type: "list",
-//     name: "",
-//     message: "Select the item that would you like to add:",
-// },
-// {
-//     type: "input",
-//     name: "quantity",
-//     message: "How many would you like to add?",
-
-// }
-// ]).then(function(response) {
-
-//       connection.query("UPDATE products SET ? WHERE ?", [{
-
-//           stock_quantity: response.quantity
-//       }, {
-//           item_id: response.product_name
-//       }], function(err, res) {
-//       });
-//   startMenu();
-// });
-// }
-
-
-
-
-
-  ////////////////////////
   connection.query("SELECT * FROM products", function(err, res){
   if(err) throw err;
   var itemArray = [];
@@ -142,9 +111,6 @@ function addToInventory(){
     
     }
     }]).then(function(res){
-      // var newItem = res.product.charAt(0);
-      // console.log(res.newItem);
-
       var query = "UPDATE products SET stock_quantity = " + res.newProduct +  " WHERE product_name = '" + res.product + "'";
             connection.query(query, function (err) {
                 if (err) throw err;
